@@ -14,33 +14,32 @@ const http = rateLimit(axios.create(), { maxRequests: 1, perMilliseconds: 55 });
 const searchName = async (cardName: string): Promise<Card | string> => {
   const SCRYFALL_API = "https://api.scryfall.com";
 
-  const cardPromise: Promise<Card | string> = new Promise(
-    async (resolve, reject) => {
-      await http
-        .get(
-          `${SCRYFALL_API}/cards/named?exact=${encodeURIComponent(cardName)}`,
-        )
-        .then(async (json: CardJSON) => {
-          const data: CardData = json.data;
+  // const cardPromise: Promise<Card | string> = new Promise<Card | string>(
+  //   async (resolve, reject) => {
+  const card = await http
+    .get(`${SCRYFALL_API}/cards/named?exact=${encodeURIComponent(cardName)}`)
+    .then(async (json: CardJSON) => {
+      const data: CardData = json.data;
 
-          if (data.lang !== "en") reject("ERROR: WRONG LANGUAGE");
+      if (data.lang !== "en") return "ERROR: WRONG LANGUAGE";
 
-          const cardData = parseCardData(data);
+      const cardData = parseCardData(data);
 
-          if (cardData) {
-            resolve(cardData);
-          } else {
-            throw new Error("CARD NOT FOUND");
-          }
-        })
-        .catch(function (error: string) {
-          console.log("error: ", error);
-          reject("ERROR: CARD NOT FOUND");
-        });
-    },
-  );
+      if (cardData) {
+        return cardData;
+      } else {
+        throw new Error("CARD NOT FOUND");
+      }
+    })
+    .catch(function (error: string) {
+      console.log("error: ", error);
+      return "ERROR: CARD NOT FOUND";
+    });
+  // return void
+  //   },
+  // );
 
-  return cardPromise;
+  return card;
 };
 
 const parseCardData = (data: CardData): Card | null => {
