@@ -1,6 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import searchName from "../utils/functions/search/searchName";
+
+import Card from "../interfaces/Card";
 
 interface SearchBarProps {
   addCard: (arg: Card) => void;
@@ -12,7 +14,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ addCard }) => {
 
   return (
     <input
-      className={`border-8  m-16 bg-white ${
+      className={`m-16  border-8 bg-white ${
         searchError ? "border-red-400" : "border-white"
       }`}
       value={input}

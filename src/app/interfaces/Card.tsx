@@ -1,3 +1,5 @@
+import SecondCard from "./SecondCard";
+
 interface Card {
   fullName: string;
   firstName: string;
@@ -37,3 +39,5 @@ interface Card {
   rulingsURI: string;
   legalities: string[];
 }
+
+export default Card;

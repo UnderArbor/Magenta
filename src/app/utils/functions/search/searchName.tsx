@@ -1,6 +1,9 @@
 import axios from "axios";
 import rateLimit from "axios-rate-limit";
 
+import Card from "../../../interfaces/Card";
+import SecondCard from "../../../interfaces/SecondCard";
+
 import formats from "../../json/formats.json";
 
 const http = rateLimit(axios.create(), { maxRequests: 1, perMilliseconds: 55 });
@@ -154,7 +157,8 @@ const parseCardData = (data: any): Card | null => {
           return keyword === "Fuse";
         }) > -1
       ) {
-        const difCMC: number = card.cmc[0] - secondCMC;
+        const currentCMC: number = data.cmc;
+        const difCMC: number = currentCMC - secondCMC;
         card.cmc.unshift(difCMC);
       }
     }
@@ -204,17 +208,17 @@ const parseSecondCardData = (data: any): SecondCard => {
 };
 
 const parseManaSymbols = (manaCost: string): string[] => {
-  const symbols1 = manaCost.split("{");
+  const symbols1: string[] = manaCost.split("{");
   let finalSymbols: string[] = [];
 
-  for (let i = 0; i < symbols1.length; ++i) {
-    const symbols2 = symbols1[i].split("}");
-    for (let j = 0; j < symbols2.length; ++j) {
-      if (symbols2[j].length > 0) {
+  for (var symbol1 of symbols1) {
+    const symbols2: string[] = symbol1.split("}");
+    for (var symbol2 of symbols2) {
+      if (symbol2.length > 0) {
         if (finalSymbols.length == 0) {
-          finalSymbols = [symbols2[j]];
+          finalSymbols = [symbol2];
         } else {
-          finalSymbols.push(symbols2[j]);
+          finalSymbols.push(symbol2);
         }
       }
     }
@@ -225,31 +229,31 @@ const parseManaSymbols = (manaCost: string): string[] => {
 
 const parseCMC = (manaSymbols: string[]): number => {
   let totalCMC = 0;
-  for (let i = 0; i < manaSymbols.length; ++i) {
-    if (isNaN(+manaSymbols[i])) {
+  for (var symbol in manaSymbols) {
+    if (isNaN(+symbol)) {
       totalCMC++;
     } else {
-      totalCMC += Number(manaSymbols[i]);
+      totalCMC += Number(symbol);
     }
   }
   return totalCMC;
 };
 
 const parseTypeLine = (types: string): string[] => {
-  const typeSplit = types.split(" ");
+  const typeSplit: string[] = types.split(" ");
 
-  let typeArray = [];
-  for (let i = 0; i < typeSplit.length; ++i) {
-    if (typeSplit[i] == "—") {
+  let typeArray: string[] = [];
+  for (var type in typeSplit) {
+    if (type == "—") {
       break;
     } else if (
-      typeSplit[i].length > 1 &&
-      typeSplit[i] !== "Legendary" &&
-      typeSplit[i] !== "Tribal" &&
-      typeSplit[i] !== "Snow" &&
-      typeSplit[i] !== "Basic"
+      type.length > 1 &&
+      type !== "Legendary" &&
+      type !== "Tribal" &&
+      type !== "Snow" &&
+      type !== "Basic"
     ) {
-      typeArray.push(typeSplit[i]);
+      typeArray.push(type);
     }
   }
 

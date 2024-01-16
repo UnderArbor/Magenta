@@ -11,3 +11,5 @@ interface SecondCard {
   normalImage: string;
   largeImage: string;
 }
+
+export default SecondCard;
