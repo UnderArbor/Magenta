@@ -13,27 +13,31 @@ const http = rateLimit(axios.create(), { maxRequests: 1, perMilliseconds: 55 });
 const searchName = async (cardName: string): Promise<Card | string> => {
   const SCRYFALL_API = "https://api.scryfall.com";
 
-  const cardPromise: Promise<Card> = new Promise(async (resolve, reject) => {
-    await http
-      .get(`${SCRYFALL_API}/cards/named?exact=${encodeURIComponent(cardName)}`)
-      .then(async (json) => {
-        const data = json.data;
+  const cardPromise: Promise<Card | string> = new Promise<Card | string>(
+    async (resolve, reject) => {
+      await http
+        .get(
+          `${SCRYFALL_API}/cards/named?exact=${encodeURIComponent(cardName)}`,
+        )
+        .then(async (json) => {
+          const data: CardData = json.data;
 
-        if (data.lang !== "en") reject("ERROR: WRONG LANGUAGE");
+          if (data.lang !== "en") reject("ERROR: WRONG LANGUAGE");
 
-        const cardData = parseCardData(data);
+          const cardData = parseCardData(data);
 
-        if (cardData) {
-          resolve(cardData);
-        } else {
-          throw new Error("CARD NOT FOUND");
-        }
-      })
-      .catch(function (error: string) {
-        console.log("error: ", error);
-        reject("ERROR: CARD NOT FOUND");
-      });
-  });
+          if (cardData) {
+            resolve(cardData);
+          } else {
+            throw new Error("CARD NOT FOUND");
+          }
+        })
+        .catch(function (error: string) {
+          console.log("error: ", error);
+          reject("ERROR: CARD NOT FOUND");
+        });
+    },
+  );
 
   return cardPromise;
 };
@@ -180,6 +184,11 @@ const parseCardData = (data: CardData): Card | null => {
   card.scryfallURI = data.scryfall_uri;
   card.rulingsURI = data.rulings_uri;
   card.legalities = [];
+  Object.entries(data.legalities).forEach((entry) => {
+    if (entry[1] === "legal" && formats.includes(entry[0])) {
+      card.legalities.push(entry[0]);
+    }
+  });
   for (const [key, value] of Object.entries(data.legalities)) {
     if (value === "legal" && formats.includes(key)) {
       card.legalities.push(key);
@@ -192,7 +201,7 @@ const parseCardData = (data: CardData): Card | null => {
 const parseSecondCardData = (data: SecondCardData): SecondCard => {
   const manaSymbols: string[] = parseManaSymbols(data.mana_cost);
 
-  let secondCard: SecondCard = {
+  const secondCard: SecondCard = {
     secondName: data.name,
     manaCost: data.mana_cost,
     originalCMC: [parseCMC(manaSymbols)],
@@ -213,9 +222,9 @@ const parseManaSymbols = (manaCost: string): string[] => {
   const symbols1: string[] = manaCost.split("{");
   let finalSymbols: string[] = [];
 
-  for (const symbol1 of symbols1) {
+  symbols1.forEach((symbol1) => {
     const symbols2: string[] = symbol1.split("}");
-    for (const symbol2 of symbols2) {
+    symbols2.forEach((symbol2) => {
       if (symbol2.length > 0) {
         if (finalSymbols.length == 0) {
           finalSymbols = [symbol2];
@@ -223,21 +232,21 @@ const parseManaSymbols = (manaCost: string): string[] => {
           finalSymbols.push(symbol2);
         }
       }
-    }
-  }
+    });
+  });
 
   return finalSymbols;
 };
 
 const parseCMC = (manaSymbols: string[]): number => {
   let totalCMC = 0;
-  for (const symbol in manaSymbols) {
+  manaSymbols.forEach((symbol) => {
     if (isNaN(+symbol)) {
       totalCMC++;
     } else {
       totalCMC += Number(symbol);
     }
-  }
+  });
   return totalCMC;
 };
 
@@ -245,9 +254,9 @@ const parseTypeLine = (types: string): string[] => {
   const typeSplit: string[] = types.split(" ");
 
   const typeArray: string[] = [];
-  for (const type in typeSplit) {
+  typeSplit.forEach((type) => {
     if (type == "—") {
-      break;
+      return;
     } else if (
       type.length > 1 &&
       type !== "Legendary" &&
@@ -257,7 +266,7 @@ const parseTypeLine = (types: string): string[] => {
     ) {
       typeArray.push(type);
     }
-  }
+  });
 
   return typeArray;
 };
