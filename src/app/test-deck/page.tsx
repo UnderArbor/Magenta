@@ -8,7 +8,6 @@ export default function Home() {
   const [cards, setCards] = useState<Card[]>([]);
 
   const addCard = (card: Card): void => {
-    console.log("card: ", card);
     setCards([...(cards ?? []), card]);
   };
 

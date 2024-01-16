@@ -4,6 +4,7 @@ import rateLimit from "axios-rate-limit";
 import type Card from "../../../interfaces/Card";
 import type SecondCard from "../../../interfaces/SecondCard";
 import type CardData from "../../../interfaces/CardData";
+import type SecondCardData from "../../../interfaces/SecondCardData";
 
 import formats from "../../json/formats.json";
 
@@ -20,7 +21,6 @@ const searchName = async (cardName: string): Promise<Card | string> => {
 
         if (data.lang !== "en") reject("ERROR: WRONG LANGUAGE");
 
-        console.log("data: ", data);
         const cardData = parseCardData(data);
 
         if (cardData) {
@@ -189,7 +189,7 @@ const parseCardData = (data: CardData): Card | null => {
   return card;
 };
 
-const parseSecondCardData = (data: any): SecondCard => {
+const parseSecondCardData = (data: SecondCardData): SecondCard => {
   const manaSymbols: string[] = parseManaSymbols(data.mana_cost);
 
   let secondCard: SecondCard = {
@@ -245,7 +245,7 @@ const parseTypeLine = (types: string): string[] => {
   const typeSplit: string[] = types.split(" ");
 
   const typeArray: string[] = [];
-  for (var type in typeSplit) {
+  for (const type in typeSplit) {
     if (type == "—") {
       break;
     } else if (
