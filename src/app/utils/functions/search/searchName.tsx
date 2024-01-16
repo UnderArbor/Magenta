@@ -3,7 +3,6 @@ import rateLimit from "axios-rate-limit";
 
 import Card from "../../../interfaces/Card";
 import SecondCard from "../../../interfaces/SecondCard";
-import CardData from "../../../interfaces/CardData";
 
 import formats from "../../json/formats.json";
 
@@ -212,9 +211,9 @@ const parseManaSymbols = (manaCost: string): string[] => {
   const symbols1: string[] = manaCost.split("{");
   let finalSymbols: string[] = [];
 
-  for (let symbol1 of symbols1) {
+  for (const symbol1 of symbols1) {
     const symbols2: string[] = symbol1.split("}");
-    for (let symbol2 of symbols2) {
+    for (const symbol2 of symbols2) {
       if (symbol2.length > 0) {
         if (finalSymbols.length == 0) {
           finalSymbols = [symbol2];
@@ -230,7 +229,7 @@ const parseManaSymbols = (manaCost: string): string[] => {
 
 const parseCMC = (manaSymbols: string[]): number => {
   let totalCMC = 0;
-  for (let symbol in manaSymbols) {
+  for (const symbol in manaSymbols) {
     if (isNaN(+symbol)) {
       totalCMC++;
     } else {
@@ -243,7 +242,7 @@ const parseCMC = (manaSymbols: string[]): number => {
 const parseTypeLine = (types: string): string[] => {
   const typeSplit: string[] = types.split(" ");
 
-  let typeArray: string[] = [];
+  const typeArray: string[] = [];
   for (var type in typeSplit) {
     if (type == "—") {
       break;
