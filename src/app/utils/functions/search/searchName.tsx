@@ -14,7 +14,7 @@ const http = rateLimit(axios.create(), { maxRequests: 1, perMilliseconds: 55 });
 const searchName = async (cardName: string): Promise<Card | string> => {
   const SCRYFALL_API = "https://api.scryfall.com";
 
-  const cardPromise: Promise<Card | string> = new Promise<Card | string>(
+  const cardPromise: Promise<Card | string> = new Promise(
     async (resolve, reject) => {
       await http
         .get(
