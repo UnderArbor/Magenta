@@ -11,6 +11,19 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model Post {
+    id        Int      @id @default(autoincrement())
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    createdBy   User   @relation(fields: [createdById], references: [id])
+    createdById String
+
+    @@index([name])
+    @@index([createdById])
+}
+
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
@@ -49,6 +62,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    posts         Post[]
 }
 
 model VerificationToken {
