@@ -1,3 +1,0 @@
-interface ErrorMsg {
-  message: string;
-}
