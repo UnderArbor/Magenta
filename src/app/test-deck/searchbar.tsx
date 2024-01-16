@@ -2,7 +2,7 @@
 import { useState } from "react";
 import searchName from "../utils/functions/search/searchName";
 
-import Card from "../interfaces/Card";
+import type Card from "../interfaces/Card";
 
 interface SearchBarProps {
   addCard: (arg: Card) => void;

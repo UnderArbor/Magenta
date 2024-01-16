@@ -1,8 +1,9 @@
 import axios from "axios";
 import rateLimit from "axios-rate-limit";
 
-import Card from "../../../interfaces/Card";
-import SecondCard from "../../../interfaces/SecondCard";
+import type Card from "../../../interfaces/Card";
+import type SecondCard from "../../../interfaces/SecondCard";
+import type CardData from "../../../interfaces/CardData";
 
 import formats from "../../json/formats.json";
 
@@ -19,6 +20,7 @@ const searchName = async (cardName: string): Promise<Card | string> => {
 
         if (data.lang !== "en") reject("ERROR: WRONG LANGUAGE");
 
+        console.log("data: ", data);
         const cardData = parseCardData(data);
 
         if (cardData) {
@@ -36,8 +38,8 @@ const searchName = async (cardName: string): Promise<Card | string> => {
   return cardPromise;
 };
 
-const parseCardData = (data: any): Card | null => {
-  let card: Card = {
+const parseCardData = (data: CardData): Card | null => {
+  const card: Card = {
     fullName: "",
     firstName: "",
     originalCMC: [],
@@ -89,11 +91,11 @@ const parseCardData = (data: any): Card | null => {
   card.flavorText =
     data.flavor_text !== undefined ? data.flavor_text.split(/\r?\n/) : [];
 
-  const typeLine = data.type_line.split(" // ").filter((n: number) => n);
+  const typeLine = data.type_line.split(" // ").filter((n) => n);
   if (typeLine.length > 1) {
     card.types = card.originalTypes = parseTypeLine(typeLine[0]);
-  } else if (typeLine.lenth === 1) {
-    card.types = card.originalTypes = parseTypeLine(typeLine);
+  } else if (typeLine.length === 1) {
+    card.types = card.originalTypes = parseTypeLine(typeLine[0]);
   }
 
   //ART INFO

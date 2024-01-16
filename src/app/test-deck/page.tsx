@@ -2,7 +2,7 @@
 import { useState } from "react";
 import SearchBar from "./searchbar";
 
-import Card from "../interfaces/Card";
+import type Card from "../interfaces/Card";
 
 export default function Home() {
   const [cards, setCards] = useState<Card[]>([]);
