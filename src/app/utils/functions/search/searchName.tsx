@@ -5,6 +5,7 @@ import type Card from "../../../interfaces/Card";
 import type SecondCard from "../../../interfaces/SecondCard";
 import type CardData from "../../../interfaces/CardData";
 import type SecondCardData from "../../../interfaces/SecondCardData";
+import type CardJSON from "../../../interfaces/CardJSON";
 
 import formats from "../../json/formats.json";
 
@@ -19,7 +20,7 @@ const searchName = async (cardName: string): Promise<Card | string> => {
         .get(
           `${SCRYFALL_API}/cards/named?exact=${encodeURIComponent(cardName)}`,
         )
-        .then(async (json) => {
+        .then(async (json: CardJSON) => {
           const data: CardData = json.data;
 
           if (data.lang !== "en") reject("ERROR: WRONG LANGUAGE");
