@@ -15,7 +15,7 @@ const searchName = async (cardName: string): Promise<Card | string> => {
   const SCRYFALL_API = "https://api.scryfall.com";
 
   const cardPromise: Promise<Card | string> = new Promise<Card | string>(
-    async (resolve, reject) => {
+    async (resolve, reject): Promise<void> => {
       await http
         .get(
           `${SCRYFALL_API}/cards/named?exact=${encodeURIComponent(cardName)}`,
