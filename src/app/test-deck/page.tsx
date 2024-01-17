@@ -21,7 +21,12 @@ export default function Home() {
         : cards.map((card: Card, index) => (
             <li key={index}>
               <h1 className="text-2xl font-bold text-white">{card.fullName}</h1>
-              <Image src={card.normalImage} alt={card.fullName} />
+              <Image
+                src={card.normalImage}
+                alt={card.fullName}
+                height={300}
+                width={300}
+              />
             </li>
           ))}
     </div>
