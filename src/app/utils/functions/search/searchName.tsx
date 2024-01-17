@@ -14,8 +14,6 @@ const http = rateLimit(axios.create(), { maxRequests: 1, perMilliseconds: 55 });
 const searchName = async (cardName: string): Promise<Card | string> => {
   const SCRYFALL_API = "https://api.scryfall.com";
 
-  // const cardPromise: Promise<Card | string> = new Promise<Card | string>(
-  //   async (resolve, reject) => {
   const card = await http
     .get(`${SCRYFALL_API}/cards/named?exact=${encodeURIComponent(cardName)}`)
     .then(async (json: CardJSON) => {
@@ -35,9 +33,6 @@ const searchName = async (cardName: string): Promise<Card | string> => {
       console.log("error: ", error);
       return "ERROR: CARD NOT FOUND";
     });
-  // return void
-  //   },
-  // );
 
   return card;
 };

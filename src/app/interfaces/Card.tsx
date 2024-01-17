@@ -1,4 +1,4 @@
-import SecondCard from "./SecondCard";
+import type SecondCard from "./SecondCard";
 
 interface Card {
   fullName: string;

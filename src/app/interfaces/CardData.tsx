@@ -110,9 +110,7 @@ interface CardData {
     cardhoarder: string;
   };
   produced_mana: string[];
-  card_faces: {
-    [index: number]: SecondCardData;
-  };
+  card_faces: [SecondCardData, SecondCardData];
 }
 
 export default CardData;
