@@ -11,8 +11,6 @@ const config = {
       {
         protocol: "https",
         hostname: "cards.scryfall.io",
-        port: "",
-        pathname: "/account123/**",
       },
     ],
   },
